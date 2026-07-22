@@ -1,0 +1,12 @@
+.venv/
+.uv/
+__pycache__/
+*.pyc
+.env
+neo4j/
+data/papers/*.pdf
+.pytest_cache/
+.ruff_cache/
+*.txt
+eval_results.csv
+.git/

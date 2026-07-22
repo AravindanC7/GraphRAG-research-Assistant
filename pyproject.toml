@@ -1,0 +1,31 @@
+[project]
+name = "graphrag-research-assistant"
+version = "0.1.0"
+description = "GraphRAG assistant over a research-paper corpus (Neo4j + LLM)"
+requires-python = ">=3.12"
+dependencies = [
+    "neo4j>=5.24,<7",
+    "neo4j-graphrag>=1.17",     # used from Phase 2 onward (KG construction, retrievers)
+    "openai>=1.40",
+    "pypdf>=6.0",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+    "python-dotenv>=1.0",
+    "tqdm>=4.66",
+    "fastapi>=0.139.2",
+    "uvicorn[standard]>=0.51.0",
+]
+
+[project.optional-dependencies]
+dev = ["ruff>=0.5", "pytest>=8.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/graphrag_assistant"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
