@@ -10,11 +10,13 @@ from .config import settings
 
 
 class Embedder:
-    def __init__(self) -> None:
-        if not settings.openai_api_key:
-            raise RuntimeError("OPENAI_API_KEY is not set. Copy .env.example to .env.")
-        self._client = OpenAI(api_key=settings.openai_api_key)
-        self.model = settings.embedding_model
+    # NOTE: embedding model is fixed by the Neo4j vector index dimensions.
+    def __init__(self, api_key: str | None = None, model: str | None = None) -> None:
+        key = api_key or settings.openai_api_key
+        if not key:
+            raise RuntimeError("No OpenAI API key provided.")
+        self._client = OpenAI(api_key=key)
+        self.model = model or settings.embedding_model
 
     def embed(self, texts: list[str]) -> list[list[float]]:
         """Return one embedding vector per input text (order preserved)."""
@@ -31,11 +33,12 @@ class ChatLLM:
     creativity).
     """
 
-    def __init__(self) -> None:
-        if not settings.openai_api_key:
-            raise RuntimeError("OPENAI_API_KEY is not set. Copy .env.example to .env.")
-        self._client = OpenAI(api_key=settings.openai_api_key)
-        self.model = settings.llm_model
+    def __init__(self, api_key: str | None = None, model: str | None = None) -> None:
+        key = api_key or settings.openai_api_key
+        if not key:
+            raise RuntimeError("No OpenAI API key provided.")
+        self._client = OpenAI(api_key=key)
+        self.model = model or settings.llm_model
 
     def complete_json(self, system_prompt: str, user_prompt: str) -> str:
         resp = self._client.chat.completions.create(

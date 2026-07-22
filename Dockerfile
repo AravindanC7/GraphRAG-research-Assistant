@@ -10,7 +10,7 @@ WORKDIR /app
 # so rebuilds after a code edit are fast).
 COPY pyproject.toml ./
 RUN uv pip install --system --no-cache \
-    fastapi "uvicorn[standard]" neo4j "neo4j-graphrag>=1.17" openai \
+    fastapi "uvicorn[standard]" python-multipart neo4j "neo4j-graphrag>=1.17" openai \
     pydantic pydantic-settings python-dotenv tqdm
 
 # Now copy the application code.

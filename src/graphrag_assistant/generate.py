@@ -38,8 +38,8 @@ def build_context(retrieval: Retrieval) -> str:
 
 
 class Generator:
-    def __init__(self) -> None:
-        self.llm = ChatLLM()
+    def __init__(self, api_key: str | None = None, model: str | None = None) -> None:
+        self.llm = ChatLLM(api_key=api_key, model=model)
 
     def answer(self, question: str, retrieval: Retrieval) -> str:
         if not retrieval.chunks and not retrieval.graph_facts:

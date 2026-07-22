@@ -47,9 +47,11 @@ ORDER BY score DESC
 class VectorRetriever:
     name = "vector"
 
-    def __init__(self) -> None:
-        self.driver = get_driver()
-        self.embedder = Embedder()
+    def __init__(self, driver=None, api_key: str | None = None,
+                 embedding_model: str | None = None) -> None:
+        self._own_driver = driver is None
+        self.driver = driver or get_driver()
+        self.embedder = Embedder(api_key=api_key, model=embedding_model)
 
     def _embed(self, question: str) -> list[float]:
         return self.embedder.embed([question])[0]
@@ -65,7 +67,8 @@ class VectorRetriever:
         return Retrieval(chunks=chunks)
 
     def close(self) -> None:
-        self.driver.close()
+        if self._own_driver:
+            self.driver.close()
 
 
 # --- Graph (GraphRAG) ----------------------------------------------------
@@ -125,10 +128,13 @@ class GraphRetriever:
 
     name = "graph"
 
-    def __init__(self, candidate_facts: int = 120, top_facts: int = 15,
+    def __init__(self, driver=None, api_key: str | None = None,
+                 embedding_model: str | None = None,
+                 candidate_facts: int = 120, top_facts: int = 15,
                  hub_max: int = 150) -> None:
-        self.driver = get_driver()
-        self.embedder = Embedder()
+        self._own_driver = driver is None
+        self.driver = driver or get_driver()
+        self.embedder = Embedder(api_key=api_key, model=embedding_model)
         self.candidate_facts = candidate_facts
         self.top_facts = top_facts
         self.hub_max = hub_max  # skip traversal through nodes with degree > hub_max
@@ -180,4 +186,5 @@ class GraphRetriever:
         return Retrieval(chunks=chunks, graph_facts=facts)
 
     def close(self) -> None:
-        self.driver.close()
+        if self._own_driver:
+            self.driver.close()
